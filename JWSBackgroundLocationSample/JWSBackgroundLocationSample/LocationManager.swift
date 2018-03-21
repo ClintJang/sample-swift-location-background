@@ -12,7 +12,7 @@ import CoreLocation
 
 final class LocationManager : NSObject {
     static let shared = LocationManager()
-    var logTimer:Timer? // 단순 로그용
+    var logTimer:Timer? // For Logging
     
     var restartTimer:Timer?
     var stopTimer:Timer?
@@ -29,11 +29,11 @@ final class LocationManager : NSObject {
         location.pausesLocationUpdatesAutomatically = false
         location.allowsBackgroundLocationUpdates = true
         
-        // 백그라운드에서 스래드 살아있나?
+        // active in the background...?
         self.logTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { (timer) in
             print("logTimer::\(Date())")
             let time:TimeInterval = UIApplication.shared.backgroundTimeRemaining
-            if time > 10000000 /*값체크는 나중에*/ { return }
+            if time > 10000000 /*10000000 ? Let's check the value later!*/ { return }
             print(String(format: "Current background status. The remaining activation times are: (%.0f)s", time))
 //            print(UIApplication.shared.backgroundTimeRemaining)
         })
@@ -44,7 +44,7 @@ extension LocationManager {
     
     // 처음 시작
     func start() {
-        print("시작:\(Date())")
+        print("Start!!:\(Date())")
         print(#function)
         
         if CLLocationManager.locationServicesEnabled() == false {
@@ -66,7 +66,7 @@ extension LocationManager {
     
     // 다시 사용안할 때 사용
     func stop() {
-        print("종료:\(Date())")
+        print("Stop:\(Date())")
         print(#function)
         
         if self.restartTimer != nil {
@@ -77,9 +77,8 @@ extension LocationManager {
         location.stopUpdatingLocation()
     }
     
-    // 재시작~
     func restart() {
-        print(#function) // 종료 시간
+        print(#function)
         
         location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         location.requestAlwaysAuthorization()
@@ -92,7 +91,7 @@ extension LocationManager {
 extension LocationManager : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print(#function)
-        // 백그라운드가 가능하게
+        // Let the background do it!
         BackgroundTaskManager.shared.beginNewTask()
         
         if self.restartTimer != nil {
@@ -100,7 +99,7 @@ extension LocationManager : CLLocationManagerDelegate {
             self.restartTimer = nil
         }
         
-        // 재시작 타이머
+        // restart Timer
         self.restartTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false, block: { (timer) in
             print(">>>>> restartTimer::\(Date())")
             self.restart()
@@ -111,7 +110,7 @@ extension LocationManager : CLLocationManagerDelegate {
             self.stopTimer = nil
         }
         
-        // 스탑 타이머
+        // Stop Timer
         self.stopTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false, block: { (timer) in
             print(">>>>> stopTimer::\(Date())")
             self.location.stopUpdatingLocation()

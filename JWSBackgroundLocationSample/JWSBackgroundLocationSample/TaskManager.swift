@@ -34,7 +34,7 @@ final class BackgroundTaskManager {
         }
     }
     
-    // 검증이 필요해~
+    // For Testing
     func endTask() {
         print(#function)
         
