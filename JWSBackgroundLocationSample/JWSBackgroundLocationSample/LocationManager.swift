@@ -34,7 +34,7 @@ final class LocationManager : NSObject {
             print("logTimer")
             let time:TimeInterval = UIApplication.shared.backgroundTimeRemaining
             if time > 10000000 /*값체크는 나중에*/ { return }
-            print(String(format: "현재 백그라운드 활성화는 %.0f초 남음", time))
+            print(String(format: "Current background status. The remaining activation times are: (%.0f)s", time))
             print(UIApplication.shared.backgroundTimeRemaining)
         })
     }
@@ -44,6 +44,7 @@ extension LocationManager {
     
     // 처음 시작
     func start() {
+        print(Date())
         print(#function)
         
         if CLLocationManager.locationServicesEnabled() == false {
@@ -65,6 +66,7 @@ extension LocationManager {
     
     // 다시 사용안할 때 사용
     func stop() {
+        print(Date())   // 시작 시간
         print(#function)
         
         if self.restartTimer != nil {
@@ -77,7 +79,7 @@ extension LocationManager {
     
     // 재시작~
     func restart() {
-        print(#function)
+        print(#function) // 종료 시간
         
         location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         location.requestAlwaysAuthorization()
