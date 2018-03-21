@@ -31,11 +31,11 @@ final class LocationManager : NSObject {
         
         // 백그라운드에서 스래드 살아있나?
         self.logTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { (timer) in
-            print("logTimer")
+            print("logTimer::\(Date())")
             let time:TimeInterval = UIApplication.shared.backgroundTimeRemaining
             if time > 10000000 /*값체크는 나중에*/ { return }
             print(String(format: "Current background status. The remaining activation times are: (%.0f)s", time))
-            print(UIApplication.shared.backgroundTimeRemaining)
+//            print(UIApplication.shared.backgroundTimeRemaining)
         })
     }
 }
@@ -44,7 +44,7 @@ extension LocationManager {
     
     // 처음 시작
     func start() {
-        print(Date())
+        print("시작:\(Date())")
         print(#function)
         
         if CLLocationManager.locationServicesEnabled() == false {
@@ -66,7 +66,7 @@ extension LocationManager {
     
     // 다시 사용안할 때 사용
     func stop() {
-        print(Date())   // 시작 시간
+        print("종료:\(Date())")
         print(#function)
         
         if self.restartTimer != nil {
@@ -96,16 +96,15 @@ extension LocationManager : CLLocationManagerDelegate {
         BackgroundTaskManager.shared.beginNewTask()
         
         if self.restartTimer != nil {
-            return
+            self.restartTimer?.invalidate()
+            self.restartTimer = nil
         }
         
         // 재시작 타이머
-        if self.restartTimer == nil {
-            self.restartTimer = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false, block: { (timer) in
-                print("restartTimer")
-                self.restart()
-            })
-        }
+        self.restartTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false, block: { (timer) in
+            print(">>>>> restartTimer::\(Date())")
+            self.restart()
+        })
         
         if self.stopTimer != nil {
             self.stopTimer?.invalidate()
@@ -114,7 +113,7 @@ extension LocationManager : CLLocationManagerDelegate {
         
         // 스탑 타이머
         self.stopTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false, block: { (timer) in
-            print("stopTimer")
+            print(">>>>> stopTimer::\(Date())")
             self.location.stopUpdatingLocation()
         })
     }
