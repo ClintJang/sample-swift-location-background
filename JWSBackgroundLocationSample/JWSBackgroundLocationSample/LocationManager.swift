@@ -7,11 +7,16 @@
 //
 
 import Foundation
+import UIKit
 import CoreLocation
 
 final class LocationManager : NSObject {
     static let shared = LocationManager()
+    var logTimer:Timer? // 단순 로그용
     
+    var restartTimer:Timer?
+    var stopTimer:Timer?
+
     var location:CLLocationManager
     override init() {
         location = CLLocationManager()
@@ -19,30 +24,96 @@ final class LocationManager : NSObject {
         
         location.delegate = self
         location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        location.requestWhenInUseAuthorization()
-//        location.requestAlwaysAuthorization()
+//        location.requestWhenInUseAuthorization()
 
         location.pausesLocationUpdatesAutomatically = false
         location.allowsBackgroundLocationUpdates = true
+        
+        // 백그라운드에서 스래드 살아있나?
+        self.logTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { (timer) in
+            print("logTimer")
+            let time:TimeInterval = UIApplication.shared.backgroundTimeRemaining
+            if time > 10000000 /*값체크는 나중에*/ { return }
+            print(String(format: "현재 백그라운드 활성화는 %.0f초 남음", time))
+            print(UIApplication.shared.backgroundTimeRemaining)
+        })
     }
 }
 
 extension LocationManager {
     
+    // 처음 시작
     func start() {
-        location.startUpdatingLocation()
+        print(#function)
+        
+        if CLLocationManager.locationServicesEnabled() == false {
+            return
+        }
+        
+        let status = CLLocationManager.authorizationStatus()
+        if status == .denied || status == .restricted {
+            print(status)
+        } else {
+            location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            location.requestAlwaysAuthorization()
+            location.distanceFilter = kCLDistanceFilterNone
+            
+            // gogo
+            location.startUpdatingLocation()
+        }
     }
     
+    // 다시 사용안할 때 사용
     func stop() {
+        print(#function)
+        
+        if self.restartTimer != nil {
+            self.restartTimer?.invalidate()
+            self.restartTimer = nil
+        }
+        
         location.stopUpdatingLocation()
     }
     
+    // 재시작~
     func restart() {
+        print(#function)
         
+        location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        location.requestAlwaysAuthorization()
+        location.distanceFilter = kCLDistanceFilterNone
+        
+        // gogo
+        location.startUpdatingLocation()
     }
 }
 extension LocationManager : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print(locations)
+        print(#function)
+        // 백그라운드가 가능하게
+        BackgroundTaskManager.shared.beginNewTask()
+        
+        if self.restartTimer != nil {
+            return
+        }
+        
+        // 재시작 타이머
+        if self.restartTimer == nil {
+            self.restartTimer = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false, block: { (timer) in
+                print("restartTimer")
+                self.restart()
+            })
+        }
+        
+        if self.stopTimer != nil {
+            self.stopTimer?.invalidate()
+            self.stopTimer = nil
+        }
+        
+        // 스탑 타이머
+        self.stopTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false, block: { (timer) in
+            print("stopTimer")
+            self.location.stopUpdatingLocation()
+        })
     }
 }
