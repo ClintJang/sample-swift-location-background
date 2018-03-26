@@ -3,6 +3,8 @@
 
 [![License](http://img.shields.io/badge/License-MIT-green.svg?style=flat)](https://github.com/ClintJang/sample-swift-location-background/blob/master/LICENSE) [![Swift 4](https://img.shields.io/badge/swift-4.0-orange.svg?style=flat)](https://swift.org) 
 
+- I'm still studying. incomplete sample~
+
 I created a sample that can get gps information in the background with swift.
 
 > How do you make GPS available in the background for a long time? Suggest a way.
@@ -19,7 +21,7 @@ Download and run it.
 - How to test?
 1. Run the project.
 2. Click the Start button.
-3. Change the app in the background.
+3. Create the app in the background.
 4. Disable your mobile phone by pressing the power button.
 5. Wait at least 10 minutes.
 6. Continue logging well.
