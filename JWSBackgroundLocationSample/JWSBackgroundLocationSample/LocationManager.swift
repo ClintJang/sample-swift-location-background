@@ -146,7 +146,7 @@ extension LocationManager : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print(#function)
         // Let the background do it!
-        BackgroundTaskManager.shared.beginNewTask()
+        BackgroundTaskManager.shared.new()
         
         let status = CLLocationManager.authorizationStatus()
         if status == .authorizedAlways {

@@ -8,20 +8,19 @@
 
 import UIKit
 
-// I'm still making it ~
 final class BackgroundTaskManager {
     static let shared = BackgroundTaskManager()
 
-    var masterId:UIBackgroundTaskIdentifier?
-    var list:[UIBackgroundTaskIdentifier] = []
+    var masterId:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var subTaskList:[UIBackgroundTaskIdentifier] = []
     
-    func beginNewTask() {
+    func new() {
         print("\(Date())>>>>> \(#function)")
 
         var bgTaskId:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
         bgTaskId = UIApplication.shared.beginBackgroundTask {
-            if let index = self.list.index(of:bgTaskId) {
-                self.list.remove(at: index)
+            if let index = self.subTaskList.index(of:bgTaskId) {
+                self.subTaskList.remove(at: index)
             }
             UIApplication.shared.endBackgroundTask(bgTaskId)
             bgTaskId = UIBackgroundTaskInvalid
@@ -31,19 +30,33 @@ final class BackgroundTaskManager {
         if masterId == UIBackgroundTaskInvalid {
             self.masterId = bgTaskId;
         } else {
-            self.list.append(bgTaskId)
-            self.endTask()
+            self.subTaskList.append(bgTaskId)
+            self.end()
         }
     }
     
-    func endTask() {
+    public func drain() {
+        for (index, task) in self.subTaskList.enumerated() {
+            UIApplication.shared.endBackgroundTask(task)
+            self.subTaskList.remove(at: index)
+        }
+        
+        if masterId != UIBackgroundTaskInvalid {
+            UIApplication.shared.endBackgroundTask(masterId)
+            masterId = UIBackgroundTaskInvalid
+        }
+    }
+    
+    func end() {
         print("\(Date())>>>>> \(#function)")
 
-        for (index, task) in self.list.enumerated() {
-            print("\(Date())>>>>> task:\(task)")
-
-            if task != masterId {
-                self.list.remove(at: index)
+        for (index, task) in self.subTaskList.enumerated() {
+            if task != masterId, index != 0 {
+                print("\(Date())>>>>> remove task:\(task)")
+                UIApplication.shared.endBackgroundTask(task)
+                self.subTaskList.remove(at: index)
+            } else {
+                print("\(Date())>>>>> subTaskList index 0:\(task)")
             }
         }
     }
