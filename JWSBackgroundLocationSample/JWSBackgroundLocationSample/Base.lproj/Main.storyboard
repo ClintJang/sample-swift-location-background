@@ -48,23 +48,46 @@
                                     <action selector="onStop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kOC-xQ-UQb"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Log ..  ..doing" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Rp0-B9-LV8">
+                                <rect key="frame" x="20" y="60" width="335" height="300"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="fSR-YG-9CD"/>
+                                </constraints>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ind-et-mc2">
+                                <rect key="frame" x="20" y="385" width="202" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Setting App Link...."/>
+                                <connections>
+                                    <action selector="onSettingApp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3SH-C5-TPK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="9bE-yh-4ew" secondAttribute="bottom" constant="40" id="4m7-m8-qSF"/>
                             <constraint firstItem="T0l-Eh-EtB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="PoT-qi-N8e"/>
+                            <constraint firstItem="Rp0-B9-LV8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Uvn-9a-7S8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="T0l-Eh-EtB" secondAttribute="bottom" constant="40" id="V41-LO-7MB"/>
+                            <constraint firstItem="Rp0-B9-LV8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="dmW-yI-Uwd"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Rp0-B9-LV8" secondAttribute="trailing" constant="20" id="pma-Xb-iib"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9bE-yh-4ew" secondAttribute="trailing" constant="40" id="z7e-lj-L65"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="logTextView" destination="Rp0-B9-LV8" id="cAv-6d-fup"/>
                         <outlet property="startButton" destination="T0l-Eh-EtB" id="Gkw-jW-1aa"/>
                         <outlet property="stopButton" destination="9bE-yh-4ew" id="OWT-Lj-qjf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-71.200000000000003" y="132.68365817091455"/>
         </scene>
     </scenes>
 </document>

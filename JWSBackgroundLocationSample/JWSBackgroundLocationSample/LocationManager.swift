@@ -16,7 +16,7 @@ final class LocationManager : NSObject {
     static let shared = LocationManager()
     
     // logTimer is an unnecessary variable. It is intended to verify that your app is working well and is live in the background.
-    var logTimer:Timer = {
+    private var logTimer:Timer = {
         var timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { (timer) in
             count += 1.0
             print("\(Date())>>>>> Repeat 1 second(\(count))")
@@ -28,11 +28,11 @@ final class LocationManager : NSObject {
         return timer
     }()
     
-    var restartTimer:Timer?
-    var stopTimer:Timer?
+    private var restartTimer:Timer?
+    private var stopTimer:Timer?
 
     // CLLocationManager
-    lazy var location:CLLocationManager = {
+    private lazy var location:CLLocationManager = {
         var location = CLLocationManager()
         location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         //        location.requestWhenInUseAuthorization()
@@ -145,6 +145,14 @@ extension LocationManager {
 extension LocationManager : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print(#function)
+        
+        for location:CLLocation in locations {
+            let coordinate:CLLocationCoordinate2D = location.coordinate
+            let horizontalAccuracy:CLLocationAccuracy = location.horizontalAccuracy
+            
+            print("latitude : \(coordinate.latitude), longitude: \(coordinate.longitude), Accuracy : \(horizontalAccuracy)")
+        }
+        
         // Let the background do it!
         BackgroundTaskManager.shared.new()
         
@@ -153,5 +161,9 @@ extension LocationManager : CLLocationManagerDelegate {
             // Reset timer time to update location information
             settingTimer(start: 30.0, stop: 10.0)
         }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, rangingBeaconsDidFailFor region: CLBeaconRegion, withError error: Error) {
+        print(error)
     }
 }

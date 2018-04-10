@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
+    @IBOutlet weak var logTextView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +35,17 @@ class ViewController: UIViewController {
         LocationManager.shared.stop()
         
         setLocationButonEnabled(true)
+    }
+    
+    @IBAction func onSettingApp(_ sender: Any) {
+        guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
+            return ()
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: { (_) in
+            })
+        }
     }
 }
 
