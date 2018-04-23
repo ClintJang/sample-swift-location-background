@@ -11,10 +11,10 @@ import UIKit
 final class BackgroundTaskManager {
     static let shared = BackgroundTaskManager()
 
-    var masterId:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
-    var subTaskList:[UIBackgroundTaskIdentifier] = []
+    private var masterId:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var subTaskList:[UIBackgroundTaskIdentifier] = []
     
-    func new() {
+    public func new() {
         print("\(Date())>>>>> \(#function)")
 
         var bgTaskId:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
@@ -36,9 +36,9 @@ final class BackgroundTaskManager {
     }
     
     public func drain() {
-        for (index, task) in self.subTaskList.enumerated() {
+        for (index, task) in subTaskList.enumerated() {
             UIApplication.shared.endBackgroundTask(task)
-            self.subTaskList.remove(at: index)
+            subTaskList.remove(at: index)
         }
         
         if masterId != UIBackgroundTaskInvalid {
@@ -47,7 +47,7 @@ final class BackgroundTaskManager {
         }
     }
     
-    func end() {
+    private func end() {
         print("\(Date())>>>>> \(#function)")
 
         for (index, task) in self.subTaskList.enumerated() {

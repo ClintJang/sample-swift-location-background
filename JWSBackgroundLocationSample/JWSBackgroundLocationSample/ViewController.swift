@@ -20,11 +20,6 @@ class ViewController: UIViewController {
         setLocationButonEnabled(true)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     @IBAction func onStart(_ sender: Any) {
         LocationManager.shared.start()
         
@@ -37,6 +32,7 @@ class ViewController: UIViewController {
         setLocationButonEnabled(true)
     }
     
+    /// Go to settings app
     @IBAction func onSettingApp(_ sender: Any) {
         guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
             return ()
@@ -56,3 +52,8 @@ extension ViewController {
     }
 }
 
+extension ViewController {
+    func addLogText(text:String) {
+        
+    }
+}

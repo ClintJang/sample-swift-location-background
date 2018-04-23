@@ -49,18 +49,17 @@
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Log ..  ..doing" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Rp0-B9-LV8">
-                                <rect key="frame" x="20" y="60" width="335" height="300"/>
+                                <rect key="frame" x="20" y="60" width="335" height="250"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="fSR-YG-9CD"/>
+                                    <constraint firstAttribute="height" constant="250" id="fSR-YG-9CD"/>
                                 </constraints>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ind-et-mc2">
-                                <rect key="frame" x="20" y="385" width="202" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ind-et-mc2">
+                                <rect key="frame" x="20" y="335" width="130" height="30"/>
                                 <state key="normal" title="Setting App Link...."/>
                                 <connections>
                                     <action selector="onSettingApp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3SH-C5-TPK"/>
@@ -74,7 +73,9 @@
                             <constraint firstItem="Rp0-B9-LV8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Uvn-9a-7S8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="T0l-Eh-EtB" secondAttribute="bottom" constant="40" id="V41-LO-7MB"/>
                             <constraint firstItem="Rp0-B9-LV8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="dmW-yI-Uwd"/>
+                            <constraint firstItem="ind-et-mc2" firstAttribute="top" secondItem="Rp0-B9-LV8" secondAttribute="bottom" constant="25" id="mXI-Om-03H"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Rp0-B9-LV8" secondAttribute="trailing" constant="20" id="pma-Xb-iib"/>
+                            <constraint firstItem="ind-et-mc2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="ySy-rs-q44"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9bE-yh-4ew" secondAttribute="trailing" constant="40" id="z7e-lj-L65"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>

@@ -26,3 +26,20 @@ Download and run it.
 5. Wait at least 10 minutes.
 6. Continue logging well.
 7. So it is success.
+
+
+# Go to settings app
+- ViewController.swift
+```swift 
+	/// Go to settings app
+	@IBAction func onSettingApp(_ sender: Any) {
+        guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
+            return ()
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: { (_) in
+            })
+        }
+    }
+```
