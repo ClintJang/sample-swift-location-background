@@ -31,8 +31,8 @@ Download and run it.
 # Go to settings app
 - ViewController.swift
 ```swift 
-	/// Go to settings app
-	@IBAction func onSettingApp(_ sender: Any) {
+    /// Go to settings app
+    @IBAction func onSettingApp(_ sender: Any) {
         guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
             return ()
         }
