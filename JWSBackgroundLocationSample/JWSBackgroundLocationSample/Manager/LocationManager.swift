@@ -25,6 +25,7 @@ final class LocationManager : NSObject {
             print(String(format: "\(Date())>>>>> Current background status. The remaining activation times are: (%.0f)s", time))
             //            print(UIApplication.shared.backgroundTimeRemaining)
         })
+        RunLoop.current.add(timer, forMode: .commonModes)
         return timer
     }()
     
@@ -47,14 +48,22 @@ final class LocationManager : NSObject {
     override init() {
         super.init()
         
+        addNofification()
+    }
+}
+
+// MARK: - Notification
+extension LocationManager {
+    func addNofification() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: .UIApplicationDidBecomeActive, object: nil)
     }
-}
-
-
-extension LocationManager {
+    
+    func removeNotification() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     @objc func applicationDidEnterBackground() {
         print("\(Date())>>>>> \(#function)!!")
     }
@@ -117,6 +126,28 @@ extension LocationManager {
     }
     
     private func settingTimer(start:TimeInterval, stop:TimeInterval) {
+        // remove restart timer and stop Timer
+        removeRestartAndStopTimer()
+
+        // restart Timer
+        let restartTimer = Timer.scheduledTimer(withTimeInterval: start, repeats: false, block: { (timer) in
+            print("\(Date())>>>>> restartTimer")
+            self.restart()
+        })
+        RunLoop.current.add(restartTimer, forMode: .commonModes)
+        self.restartTimer = restartTimer
+        
+        // Stop Timer
+        let stopTimer = Timer.scheduledTimer(withTimeInterval: stop, repeats: false, block: { (timer) in
+            print("\(Date())>>>>> stopTimer")
+            self.location.stopUpdatingLocation()
+        })
+        RunLoop.current.add(stopTimer, forMode: .commonModes)
+        self.stopTimer = stopTimer
+    }
+    
+    /// remove restart timer and stop Timer
+    private func removeRestartAndStopTimer() {
         if self.restartTimer != nil {
             self.restartTimer?.invalidate()
             self.restartTimer = nil
@@ -126,19 +157,6 @@ extension LocationManager {
             self.stopTimer?.invalidate()
             self.stopTimer = nil
         }
-        
-        // restart Timer
-        self.restartTimer = Timer.scheduledTimer(withTimeInterval: start, repeats: false, block: { (timer) in
-            print("\(Date())>>>>> restartTimer")
-            self.restart()
-        })
-        
-        // Stop Timer
-        self.stopTimer = Timer.scheduledTimer(withTimeInterval: stop, repeats: false, block: { (timer) in
-            print("\(Date())>>>>> stopTimer")
-            self.location.stopUpdatingLocation()
-           
-        })
     }
 }
 
