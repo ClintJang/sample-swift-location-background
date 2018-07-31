@@ -106,9 +106,9 @@ extension LocationManager {
     }
 }
 
-//MARK: private function
-extension LocationManager {
-    private func startUpdatingLocation() {
+//MARK: - private function
+private extension LocationManager {
+     func startUpdatingLocation() {
         location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         location.requestAlwaysAuthorization()
         location.distanceFilter = kCLDistanceFilterNone
@@ -116,7 +116,7 @@ extension LocationManager {
         location.startUpdatingLocation()
     }
     
-    private func stopUpdatingLocation() {
+    func stopUpdatingLocation() {
         if self.restartTimer != nil {
             self.restartTimer?.invalidate()
             self.restartTimer = nil
@@ -125,29 +125,23 @@ extension LocationManager {
         location.stopUpdatingLocation()
     }
     
-    private func settingTimer(start:TimeInterval, stop:TimeInterval) {
+    func settingTimer(start:TimeInterval, stop:TimeInterval) {
         // remove restart timer and stop Timer
         removeRestartAndStopTimer()
 
         // restart Timer
-        let restartTimer = Timer.scheduledTimer(withTimeInterval: start, repeats: false, block: { (timer) in
-            print("\(Date())>>>>> restartTimer")
-            self.restart()
-        })
+        let restartTimer = Timer.scheduledTimer(timeInterval: start, target: self, selector: Selector.updateRestartTimer, userInfo: nil, repeats: false)
         RunLoop.current.add(restartTimer, forMode: .commonModes)
         self.restartTimer = restartTimer
         
         // Stop Timer
-        let stopTimer = Timer.scheduledTimer(withTimeInterval: stop, repeats: false, block: { (timer) in
-            print("\(Date())>>>>> stopTimer")
-            self.location.stopUpdatingLocation()
-        })
+        let stopTimer = Timer.scheduledTimer(timeInterval: stop, target: self, selector: Selector.updateStopTimer, userInfo: nil, repeats: false)
         RunLoop.current.add(stopTimer, forMode: .commonModes)
         self.stopTimer = stopTimer
     }
     
     /// remove restart timer and stop Timer
-    private func removeRestartAndStopTimer() {
+    func removeRestartAndStopTimer() {
         if self.restartTimer != nil {
             self.restartTimer?.invalidate()
             self.restartTimer = nil
@@ -158,8 +152,21 @@ extension LocationManager {
             self.stopTimer = nil
         }
     }
+    
+    /// restart timer selector
+    @objc func updateRestartTimer() {
+        print("\(Date())>>>>> restartTimer")
+        self.restart()
+    }
+    
+    /// stop timer selector
+    @objc func updateStopTimer() {
+        print("\(Date())>>>>> stopTimer")
+        self.location.stopUpdatingLocation()
+    }
 }
 
+// MARK: - CLLocationManagerDelegate
 extension LocationManager : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print(#function)
@@ -175,13 +182,17 @@ extension LocationManager : CLLocationManagerDelegate {
         BackgroundTaskManager.shared.new()
         
         let status = CLLocationManager.authorizationStatus()
-        if status == .authorizedAlways {
-            // Reset timer time to update location information
-            settingTimer(start: 30.0, stop: 10.0)
-        }
+        // Reset timer time to update location information
+        if status == .authorizedAlways { settingTimer(start: 30.0, stop: 10.0) }
     }
     
     func locationManager(_ manager: CLLocationManager, rangingBeaconsDidFailFor region: CLBeaconRegion, withError error: Error) {
         print(error)
     }
+}
+
+// MARK: - Selector Extension
+fileprivate extension Selector {
+    static let updateRestartTimer = #selector(LocationManager.updateRestartTimer)
+    static let updateStopTimer = #selector(LocationManager.updateStopTimer)
 }
